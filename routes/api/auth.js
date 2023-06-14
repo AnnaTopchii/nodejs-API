@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { validateBody, authenticate } = require("../../middlewares");
 
-const { schemas } = require("../../models/user");
+const { schemas } = require("../../schemas/joiUserSchemas");
 
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 

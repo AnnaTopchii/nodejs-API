@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const Joi = require("joi");
 
 const { handleMongooseError } = require("../middlewares");
 
@@ -30,26 +29,6 @@ const userSchema = new Schema(
 
 userSchema.post("save", handleMongooseError);
 
-const registerSchema = Joi.object({
-  password: Joi.string().min(6).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
-  subscription: Joi.string(),
-});
-
-const loginSchema = Joi.object({
-  password: Joi.string().min(6).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
-  subscription: Joi.string(),
-});
-
-const schemas = {
-  registerSchema,
-  loginSchema,
-};
-
 const User = model("user", userSchema);
 
-module.exports = {
-  User,
-  schemas,
-};
+module.exports = User;
