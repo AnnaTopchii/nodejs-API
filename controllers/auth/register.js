@@ -10,23 +10,25 @@ const { BASE_URL } = process.env;
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+  const verificationToken = nanoid();
+  const emailLink = `${BASE_URL}/api/users/verify/${verificationToken}`;
 
   if (user) {
     throw HttpError(409, "Email in use");
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const verificationCode = nanoid();
+
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    verificationCode,
+    verificationToken,
   });
 
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationCode}">Click verify email</a>`,
+    html: `<a target="_blank" href="${emailLink}">Click verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
